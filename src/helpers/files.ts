@@ -33,3 +33,13 @@ export function getWorkspaceDirectory(): Uri | null {
   }
   return null;
 }
+
+export async function formatTextDocument(uri: Uri) {
+  return workspace.openTextDocument(uri)
+      .then((doc) => {
+          return window.showTextDocument(doc);
+      })
+      .then(() => {
+          return commands.executeCommand('editor.action.formatDocument');
+      });
+}

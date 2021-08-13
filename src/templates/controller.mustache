@@ -1,0 +1,11 @@
+import {Controller, Get} from "@tsed/common";
+
+/* https://tsed.io/docs/controllers.html */
+
+@Controller("/{{LowercaseName}}s")
+export class {{Name}}Controller {
+  @Get()
+  findAll(): string {
+    return "This endpoint returns all {{LowercaseName}}s";
+  }
+}

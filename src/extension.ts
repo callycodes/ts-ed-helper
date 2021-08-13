@@ -1,9 +1,12 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { Uri } from 'vscode';
+import { Uri, workspace, window } from 'vscode';
 import { createConfigurationFile, configurationFileExists, getConfiguration } from './helpers/settings';
-import { getWorkspaceDirectory } from './helpers/files';
+import { createFile, formatTextDocument, getWorkspaceDirectory } from './helpers/files';
+import { getClassName, invalidFileNames } from './helpers/utils';
+import { getFileTemplate } from './helpers/mustache';
+import { TextEncoder } from 'util';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -54,7 +57,30 @@ export function activate(context: vscode.ExtensionContext) {
 	//Start of generators
 
 	let disposableGenerateControllerCommand = vscode.commands.registerCommand('ts-ed-helper.generateController', async (resource: Uri) => {
-		
+		if (workspace === undefined) {
+			return window.showErrorMessage('Please select a workspace first');
+		} else {
+			return window.showInputBox({
+				placeHolder: "Please enter controller name",
+			})
+			.then<any>((input) => {
+				if (input === undefined) { return; }
+				if (!invalidFileNames.test(input)) {
+					createFile(getClassName(input) + "Controller", "ts", resource).then((file) => {
+						if (file) {
+							getFileTemplate(input, "controller").then((template) => {
+								return workspace.fs.writeFile(file, new TextEncoder().encode(template));
+							}).then(() => {
+								return formatTextDocument(file);
+							});
+						}
+					});
+
+				} else {
+					return window.showErrorMessage('Invalid filename');
+				}
+			});
+		}
 	});
 
 
