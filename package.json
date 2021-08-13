@@ -10,32 +10,54 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:ts-ed-helper.helloWorld"
+		"onCommand:ts-ed-helper.createConfig",
+		"onCommand:ts-ed-helper.generateController",
+		"onCommand:ts-ed-helper.generateModel",
+		"onCommand:ts-ed-helper.configExists",
+		"onCommand:ts-ed-helper.getConfig"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "ts-ed-helper.helloWorld",
+				"command": "ts-ed-helper.createConfig",
+				"title": "Ts.ED - Create Configuration"
+			},
+			{
+				"command": "ts-ed-helper.configExists",
+				"title": "Ts.ED - Check Configuration Exists"
+			},
+			{
+				"command": "ts-ed-helper.getConfig",
+				"title": "Ts.ED - Get Configuration"
+			},
+			{
+				"command": "ts-ed-helper.generateController",
 				"title": "Ts.ED - Generate Controller"
 			},
 			{
-				"command": "ts-ed-helper.anotherOne",
+				"command": "ts-ed-helper.generateModel",
 				"title": "Ts.ED - Generate Model"
 			}
 		],
 		"menus": {
 			"explorer/context": [
-			{
-				"command": "ts-ed-helper.helloWorld",
-				"when": "explorerResourceIsFolder",
-				"group": "2_workspace"
-			},
-			{
-				"command": "ts-ed-helper.anotherOne",
-				"when": "explorerResourceIsFolder",
-				"group": "2_workspace"
-		}]
+				{
+					"command": "ts-ed-helper.createConfig",
+					"when": "true",
+					"group": "2_workspace"
+				},
+				{
+					"command": "ts-ed-helper.generateController",
+					"when": "explorerResourceIsFolder",
+					"group": "2_workspace"
+				},
+				{
+					"command": "ts-ed-helper.generateModel",
+					"when": "explorerResourceIsFolder",
+					"group": "2_workspace"
+				}
+			]
 		}
 	},
 	"scripts": {
@@ -47,16 +69,22 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.59.0",
+		"@types/fs-extra": "^9.0.12",
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.2.2",
+		"@types/mustache": "^4.1.2",
 		"@types/node": "14.x",
-		"eslint": "^7.27.0",
+		"@types/vscode": "^1.59.0",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
+		"eslint": "^7.27.0",
 		"glob": "^7.1.7",
 		"mocha": "^8.4.0",
 		"typescript": "^4.3.2",
 		"vscode-test": "^1.5.2"
+	},
+	"dependencies": {
+		"fs-extra": "^10.0.0",
+		"mustache": "^4.2.0"
 	}
 }
