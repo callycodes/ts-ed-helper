@@ -1,0 +1,62 @@
+{
+	"name": "ts-ed-helper",
+	"displayName": "Ts.ED Helper",
+	"description": "Quickly generate modules and boilerplate code for the Ts.Ed framework",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.59.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:ts-ed-helper.helloWorld"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "ts-ed-helper.helloWorld",
+				"title": "Ts.ED - Generate Controller"
+			},
+			{
+				"command": "ts-ed-helper.anotherOne",
+				"title": "Ts.ED - Generate Model"
+			}
+		],
+		"menus": {
+			"explorer/context": [
+			{
+				"command": "ts-ed-helper.helloWorld",
+				"when": "explorerResourceIsFolder",
+				"group": "2_workspace"
+			},
+			{
+				"command": "ts-ed-helper.anotherOne",
+				"when": "explorerResourceIsFolder",
+				"group": "2_workspace"
+		}]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.59.0",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.2.2",
+		"@types/node": "14.x",
+		"eslint": "^7.27.0",
+		"@typescript-eslint/eslint-plugin": "^4.26.0",
+		"@typescript-eslint/parser": "^4.26.0",
+		"glob": "^7.1.7",
+		"mocha": "^8.4.0",
+		"typescript": "^4.3.2",
+		"vscode-test": "^1.5.2"
+	}
+}
