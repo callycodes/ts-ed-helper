@@ -7,6 +7,7 @@ import { createFile, formatTextDocument, getWorkspaceDirectory } from './helpers
 import { getClassName, invalidFileNames } from './helpers/utils';
 import { getFileTemplate } from './helpers/mustache';
 import { TextEncoder } from 'util';
+import SettingsContainer, { ISettingsContainer } from './settings';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -66,9 +67,10 @@ export function activate(context: vscode.ExtensionContext) {
 			.then<any>((input) => {
 				if (input === undefined) { return; }
 				if (!invalidFileNames.test(input)) {
-					createFile(getClassName(input) + "Controller", "ts", resource).then((file) => {
+					createFile(getClassName(input) + "Controller", "ts", resource).then(async (file) => {
 						if (file) {
-							getFileTemplate(input, "controller").then((template) => {
+							const config: ISettingsContainer = await getConfiguration();
+							getFileTemplate(input, "controller", config.controllerSettings).then((template) => {
 								return workspace.fs.writeFile(file, new TextEncoder().encode(template));
 							}).then(() => {
 								return formatTextDocument(file);

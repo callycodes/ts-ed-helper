@@ -5,13 +5,14 @@ import { getClassName, getPascalCase } from "./utils";
 
 type TemplateType = "controller" | "model";
 
-export async function getFileTemplate(name: string, type: TemplateType): Promise<string> {
+export async function getFileTemplate(name: string, type: TemplateType, settings: Object): Promise<string> {
   return fs.readFile(join(__dirname, `/../templates/${type}.mustache`), 'utf8')
       .then((data) => {
           const className = getClassName(name);
           let view = {
               Name: className,
-              LowercaseName: className.toLowerCase()
+              LowercaseName: className.toLowerCase(),
+              settings
           };
           return render(data, view);
       });

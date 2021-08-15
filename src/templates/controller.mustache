@@ -1,11 +1,25 @@
-import {Controller, Get} from "@tsed/common";
+import {Controller, Get, Post, Put, Delete, Patch} from "@tsed/common";
 
 /* https://tsed.io/docs/controllers.html */
 
+interface {{Name}} {
+  id: string;
+}
+
 @Controller("/{{LowercaseName}}s")
 export class {{Name}}Controller {
+
+  {{#settings.active.getAll}}
   @Get()
-  findAll(): string {
-    return "This endpoint returns all {{LowercaseName}}s";
+  {{#settings.async}}async {{/settings.async}}getAll(): {{#settings.async}}Promise<{{Name}}>{{/settings.async}}{{^settings.async}}string{{/settings.async}} {
+    return "This action returns all {{LowercaseName}}s";
   }
+  {{/settings.active.getAll}}
+
+  {{#settings.active.getOne}}
+  @Get("/:id")
+  {{#settings.async}}async {{/settings.async}}getOne(@PathParams("id") id: string): {{#settings.async}}Promise<{{Name}}>{{/settings.async}}{{^settings.async}}string{{/settings.async}} {
+    return "This action returns one {{LowercaseName}}";
+  }
+  {{/settings.active.getOne}}
 }

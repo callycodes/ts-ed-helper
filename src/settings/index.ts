@@ -1,12 +1,21 @@
+
+
+export interface ISettingsContainer {
+  controllerSettings: Object
+}
+
 export default class SettingsContainer {
   controllerSettings:Object = {
-    active: true
+    async: true,
+    active: {
+      getAll: true,
+      getOne: true,
+      delete: true,
+      patch: true,
+      put: true,
+      post: true
+    }
   };
-
-  async merge(data: Object): Promise<Object> {
-    const merged = {...this.getConfig(), ...data};
-    return merged;
-  }
 
   getConfig() {
     let config = {

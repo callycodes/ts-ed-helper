@@ -1,7 +1,8 @@
 import { commands, Uri, window, workspace } from "vscode";
 import { createFile, getWorkspaceDirectory } from "./files";
 import * as fs from "fs-extra";
-import SettingsContainer from "../settings";
+import SettingsContainer, { ISettingsContainer } from "../settings";
+import _, { map } from 'underscore';
 
 const configName: string = "tsed";
 const configExtension: string = "config.json";
@@ -31,14 +32,36 @@ export async function configurationFileExists() {
   }
 }
 
-export async function getConfiguration(): Promise<Object> {
-  let container = new SettingsContainer();
+export async function getConfiguration(): Promise<ISettingsContainer> {
+  const container = new SettingsContainer();
   const workspaceDir = getWorkspaceDirectory();
   try {
-    const json: Object = JSON.parse(await fs.readFile(workspaceDir?.fsPath + "/" + configFullName, "utf-8"));
-    const merged = await container.merge(json);
+    const json = JSON.parse(await fs.readFile(workspaceDir?.fsPath + "/" + configFullName, "utf-8"));
+    const merged = await mergeConfigurations(container.getConfig(), json);
     return merged;
   } catch {
     return container.getConfig();
   }
+}
+
+async function mergeConfigurations(existing: object, data: object) {
+  const merged = overwriteObjectValues(existing, data);
+  return merged;
+}
+
+function overwriteObjectValues(template: any, values: any) {
+  Object.keys(values).forEach(function(key) {
+    if (key in template) {
+        //If the property type is an object, must have nested
+        //properties, so call function recursively to replace
+        //nested fields.
+        if (typeof values[key] === "object") {
+          overwriteObjectValues(template[key], values[key]);
+        } else {
+          //Otherwise, overwrite the value, loop to next.
+          template[key] = values[key];
+        }
+    }
+});
+return template;
 }
