@@ -3,8 +3,8 @@
 import * as vscode from 'vscode';
 import { Uri, workspace, window } from 'vscode';
 import { createConfigurationFile, configurationFileExists, getConfiguration } from './helpers/settings';
-import { createFile, formatTextDocument, getWorkspaceDirectory } from './helpers/files';
-import { getClassName, invalidFileNames } from './helpers/utils';
+import { addToServerConfiguration, createFile, formatTextDocument, getWorkspaceDirectory } from './helpers/files';
+import { getClassName, invalidFileNames, transformModuleName } from './helpers/utils';
 import { getFileTemplate } from './helpers/mustache';
 import { TextEncoder } from 'util';
 import SettingsContainer, { ISettingsContainer } from './settings';
@@ -64,16 +64,84 @@ export function activate(context: vscode.ExtensionContext) {
 			return window.showInputBox({
 				placeHolder: "Please enter controller name",
 			})
-			.then<any>((input) => {
+			.then<any>(async (input) => {
 				if (input === undefined) { return; }
 				if (!invalidFileNames.test(input)) {
-					createFile(getClassName(input) + "Controller", "ts", resource).then(async (file) => {
+					const config: ISettingsContainer = await getConfiguration();
+					createFile(getClassName(input) + transformModuleName("Controller", config), config.configuration.lang, resource).then(async (file) => {
 						if (file) {
-							const config: ISettingsContainer = await getConfiguration();
-							getFileTemplate(input, "controller", config.controllerSettings).then((template) => {
+							getFileTemplate(input, "controller", config.controllers).then((template) => {
 								return workspace.fs.writeFile(file, new TextEncoder().encode(template));
 							}).then(() => {
 								return formatTextDocument(file);
+							}).then(() => {
+								workspace.saveAll();
+							});
+						}
+					});
+
+				} else {
+					return window.showErrorMessage('Invalid filename');
+				}
+			});
+		}
+	});
+
+	let disposableGenerateMiddlewareCommand = vscode.commands.registerCommand('ts-ed-helper.generateMiddleware', async (resource: Uri) => {
+		if (workspace === undefined) {
+			return window.showErrorMessage('Please select a workspace first');
+		} else {
+			return window.showInputBox({
+				placeHolder: "Please enter middleware name",
+			})
+			.then<any>(async (input) => {
+				if (input === undefined) { return; }
+				if (!invalidFileNames.test(input)) {
+
+					const config: ISettingsContainer = await getConfiguration();
+					createFile(getClassName(input) + transformModuleName("Middleware", config), config.configuration.lang, resource).then(async (file) => {
+						if (file) {
+							getFileTemplate(input, "middleware", config.middlewares).then((template) => {
+								return workspace.fs.writeFile(file, new TextEncoder().encode(template));
+							}).then(() => {
+								return formatTextDocument(file);
+							}).then(() => {
+								if (config.middlewares.addToServerConfig) {
+									return addToServerConfiguration("middleware", resource);
+								} else {
+									return;
+								}
+							}).then(() => {
+								workspace.saveAll();
+							});
+						}
+					});
+				} else {
+					return window.showErrorMessage('Invalid filename');
+				}
+			});
+		}
+	});
+
+	let disposableGenerateServiceCommand = vscode.commands.registerCommand('ts-ed-helper.generateService', async (resource: Uri) => {
+		if (workspace === undefined) {
+			return window.showErrorMessage('Please select a workspace first');
+		} else {
+			return window.showInputBox({
+				placeHolder: "Please enter a service name",
+			})
+			.then<any>(async (input) => {
+				if (input === undefined) { return; }
+				if (!invalidFileNames.test(input)) {
+					const config: ISettingsContainer = await getConfiguration();
+					createFile(getClassName(input) + transformModuleName("Service", config), config.configuration.lang, resource).then(async (file) => {
+						if (file) {
+							getFileTemplate(input, "service", config.services).then((template) => {
+								return workspace.fs.writeFile(file, new TextEncoder().encode(template));
+							}).then(() => {
+								return formatTextDocument(file);
+							}).then(() => {
+								workspace.saveAll();
 							});
 						}
 					});
@@ -92,8 +160,10 @@ export function activate(context: vscode.ExtensionContext) {
 		disposableCreateConfigurationCommand,
 		disposableConfigurationExistsCommand,
 		disposableGetConfigurationCommand,
-		//Start of generat commands
-		disposableGenerateControllerCommand
+		//Start of generator commands
+		disposableGenerateControllerCommand,
+		disposableGenerateMiddlewareCommand,
+		disposableGenerateServiceCommand
 	);
 }
 

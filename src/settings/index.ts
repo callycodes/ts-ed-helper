@@ -1,11 +1,36 @@
-
-
 export interface ISettingsContainer {
-  controllerSettings: Object
+  configuration: {
+    lang: string
+    filename: string
+    naming: string
+  }
+  controllers: {
+    async: boolean,
+    active: {
+      getAll: boolean,
+      getOne: boolean,
+      delete: boolean,
+      patch: boolean,
+      put: boolean,
+      post: boolean
+    }
+  }
+  middlewares: {
+    addToServerConfig: boolean
+  },
+  services: {
+    injectable: boolean
+  }
 }
 
-export default class SettingsContainer {
-  controllerSettings:Object = {
+export default class SettingsContainer implements ISettingsContainer {
+  configuration = {
+    lang: "ts",
+    filename: "Server",
+    naming: "lower+dot"
+  };
+
+  controllers = {
     async: true,
     active: {
       getAll: true,
@@ -17,9 +42,20 @@ export default class SettingsContainer {
     }
   };
 
+  middlewares = {
+    addToServerConfig: true
+  };
+
+  services = {
+    injectable: true
+  };
+
   getConfig() {
     let config = {
-      "controllerSettings": this.controllerSettings
+      "configuration": this.configuration,
+      "controllers": this.controllers,
+      "middlewares": this.middlewares,
+      "services": this.services
     };
 
     return config;

@@ -3,7 +3,7 @@ import { render } from "mustache";
 import { join, basename } from "path";
 import { getClassName, getPascalCase } from "./utils";
 
-type TemplateType = "controller" | "model";
+type TemplateType = "controller" | "middleware" | "service";
 
 export async function getFileTemplate(name: string, type: TemplateType, settings: Object): Promise<string> {
   return fs.readFile(join(__dirname, `/../templates/${type}.mustache`), 'utf8')

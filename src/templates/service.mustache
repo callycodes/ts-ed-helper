@@ -1,0 +1,21 @@
+import { {{#settings.injectable}}Injectable, ProviderScope, ProviderType{{/settings.injectable}}{{^settings.injectable}}Service{{/settings.injectable}} } from "@tsed/common";
+import { {{Name}} } from "../models/{{Name}}";
+
+/* https://tsed.io/docs/providers.html#services */
+{{#settings.injectable}}
+@Injectable({
+  type: ProviderType.SERVICE,
+  scope: ProviderScope.SINGLETON
+}){{/settings.injectable}}
+{{^settings.injectable}}@Service(){{/settings.injectable}}
+export class {{Name}}sService {
+  private readonly {{LowercaseName}}s: {{Name}}[] = [];
+
+  create({{LowercaseName}}: {{Name}}) {
+    this.{{LowercaseName}}s.push({{LowercaseName}});
+  }
+
+  findAll(): {{Name}}[] {
+    return this.{{LowercaseName}}s;
+  }
+}

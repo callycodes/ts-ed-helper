@@ -1,0 +1,10 @@
+import {Middleware, Req} from "@tsed/common";
+
+/* https://tsed.io/docs/middlewares.html */
+
+@Middleware()
+export class {{Name}}Middleware {
+  use(@Req() req: Req) {
+    console.log("ID", req.id);
+  }
+}

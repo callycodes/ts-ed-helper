@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Put, Delete, Patch} from "@tsed/common";
+import {Controller, Get, Post, Put, Delete, Patch, BodyParams, PathParams} from "@tsed/common";
 
 /* https://tsed.io/docs/controllers.html */
 
@@ -18,8 +18,22 @@ export class {{Name}}Controller {
 
   {{#settings.active.getOne}}
   @Get("/:id")
-  {{#settings.async}}async {{/settings.async}}getOne(@PathParams("id") id: string): {{#settings.async}}Promise<{{Name}}>{{/settings.async}}{{^settings.async}}string{{/settings.async}} {
+  {{#settings.async}}async {{/settings.async}}get(@PathParams("id") id: string): {{#settings.async}}Promise<{{Name}}>{{/settings.async}}{{^settings.async}}string{{/settings.async}} {
     return "This action returns one {{LowercaseName}}";
   }
   {{/settings.active.getOne}}
+
+  {{#settings.active.delete}}
+  @Delete("/:id")
+  {{#settings.async}}async {{/settings.async}}delete(@PathParams("id") id: string): {{#settings.async}}Promise<void>{{/settings.async}}{{^settings.async}}void{{/settings.async}} {
+    return "This action returns one {{LowercaseName}}";
+  }
+  {{/settings.active.delete}}
+
+  {{#settings.active.post}}
+  @Post()
+  {{#settings.async}}async {{/settings.async}}create(@BodyParams() body: any): {{#settings.async}}Promise<any>{{/settings.async}}{{^settings.async}}any{{/settings.async}} {
+    return "This action creates one {{LowercaseName}}";
+  }
+  {{/settings.active.post}}
 }

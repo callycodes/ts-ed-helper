@@ -2,7 +2,6 @@ import { commands, Uri, window, workspace } from "vscode";
 import { createFile, getWorkspaceDirectory } from "./files";
 import * as fs from "fs-extra";
 import SettingsContainer, { ISettingsContainer } from "../settings";
-import _, { map } from 'underscore';
 
 const configName: string = "tsed";
 const configExtension: string = "config.json";

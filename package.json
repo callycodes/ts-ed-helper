@@ -1,8 +1,14 @@
 {
 	"name": "ts-ed-helper",
 	"displayName": "Ts.ED Helper",
+	"publisher": "callycodes",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/callycodes/ts-ed-helper"
+	},
+	"icon": "logo.png",
 	"description": "Quickly generate modules and boilerplate code for the Ts.Ed framework",
-	"version": "0.0.1",
+	"version": "1.1.1",
 	"engines": {
 		"vscode": "^1.59.0"
 	},
@@ -12,9 +18,8 @@
 	"activationEvents": [
 		"onCommand:ts-ed-helper.createConfig",
 		"onCommand:ts-ed-helper.generateController",
-		"onCommand:ts-ed-helper.generateModel",
-		"onCommand:ts-ed-helper.configExists",
-		"onCommand:ts-ed-helper.getConfig"
+		"onCommand:ts-ed-helper.generateMiddleware",
+		"onCommand:ts-ed-helper.generateService"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -24,20 +29,16 @@
 				"title": "Ts.ED - Create Configuration"
 			},
 			{
-				"command": "ts-ed-helper.configExists",
-				"title": "Ts.ED - Check Configuration Exists"
-			},
-			{
-				"command": "ts-ed-helper.getConfig",
-				"title": "Ts.ED - Get Configuration"
-			},
-			{
 				"command": "ts-ed-helper.generateController",
 				"title": "Ts.ED - Generate Controller"
 			},
 			{
-				"command": "ts-ed-helper.generateModel",
-				"title": "Ts.ED - Generate Model"
+				"command": "ts-ed-helper.generateMiddleware",
+				"title": "Ts.ED - Generate Middleware"
+			},
+			{
+				"command": "ts-ed-helper.generateService",
+				"title": "Ts.ED - Generate Service"
 			}
 		],
 		"menus": {
@@ -53,7 +54,12 @@
 					"group": "2_workspace"
 				},
 				{
-					"command": "ts-ed-helper.generateModel",
+					"command": "ts-ed-helper.generateMiddleware",
+					"when": "explorerResourceIsFolder",
+					"group": "2_workspace"
+				},
+				{
+					"command": "ts-ed-helper.generateService",
 					"when": "explorerResourceIsFolder",
 					"group": "2_workspace"
 				}
@@ -75,7 +81,6 @@
 		"@types/mocha": "^8.2.2",
 		"@types/mustache": "^4.1.2",
 		"@types/node": "14.x",
-		"@types/underscore": "^1.11.3",
 		"@types/vscode": "^1.59.0",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
@@ -87,7 +92,6 @@
 	},
 	"dependencies": {
 		"fs-extra": "^10.0.0",
-		"mustache": "^4.2.0",
-		"underscore": "^1.13.1"
+		"mustache": "^4.2.0"
 	}
 }
